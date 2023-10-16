@@ -189,16 +189,3 @@ class SimpleDataAnalyser:
         else:
             self.__suburbSummaryHelper(suburbMap,suburb)
                 
-            
-
-
-
-
-a=SimpleDataAnalyser()
-b=a.extract_property_info("property_information.csv")
-# c=a.currency_exchange(b,1)
-# print(a.avg_land_size(b,"ab"))
-# print(a.locate_price(881000,b,"Clayton"))
-# a._suburbSummaryHelper(b,"Clayton")
-a.suburb_summary(b,"Clayton")
-# a._showAnalytics([1,2,3,4,5,6])
