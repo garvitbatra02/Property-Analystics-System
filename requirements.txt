@@ -1,0 +1,53 @@
+This is a particular property system required to be developed
+
+
+1->Extracting Property Information:
+extract_property_info(file_path)=> this is the type of function to read the file input provided
+returns a dataframe of all property details
+
+2->Currency Exchange
+currency_exchange(dataframe, exchange_rate)=>
+return a numPY array of transformed prices according to exchange price provided
+
+3->Suburb Property Summary
+summary of the properties with respect to the number of bedrooms, number of bathrooms and number of parking spaces for a given suburb
+suburb_summary(dataframe, suburb)=> need to display the mean values, standard deviation, median, minimum and maximum for a particular suburb
+
+if(suburb=="All")=>print summary for all suburbs
+else print for a single suburb
+error message: exception if suburb dont exist
+
+4->Average Land Size
+avg_land_size(dataframe, suburb)=>calculates and returns the average land size in 𝑚 of properties in the suburb . Units are in (m^2 or ha) 
+
+if(suburb=="All")=>print av size for all suburbs
+else return for only suburb you want
+error message: exception if suburb dont exist
+
+
+5->Property Value Distribution
+
+currency_dict = {"AUD": 1, "USD": 0.66, "INR": 54.25, "CNY":
+4.72, "JPY": 93.87, "HKD": 5.12, "KRW": 860.92, "GBP": 0.51,
+"EUR": 0.60, "SGD": 0.88}
+
+prop_val_distribution(dataframe, suburb,target_currency)=> 
+1. Converts the property value into the target currency if the currency is in the
+currency_dict. In cases where the target currency does not exist in the
+currency_dict, the program needs to inform the user and generate the
+histogram in AUD.
+
+2.give histogram of the property valuedistribution(for the given currency format) of the specified suburb(if "All" give for all)
+
+3.if requested suburbun dont exist in dataframe take suburb as "All" and save graph file
+
+4.missing values should be excluded
+
+
+6->Sales Trend
+sales_trend(dataframe)=> give a line chart implementation of properties sold in each year and save it locally 
+
+
+7-> Identifying a Property of a Specific Price in a Suburb
+locate_price(target_price, data,target_suburb)=> for a particular suburb first get all the data and then sort in reverse order by insertion sort and then apply recursive binary search to get whether property of given value is there or not
+return =>true if exists
