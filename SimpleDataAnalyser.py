@@ -14,31 +14,75 @@ class SimpleDataAnalyser:
                 return self.__recursiveBinarySearchForPropertyPrices(arr, target, mid+1, high)
         return False  # Element is not in the list
 
+    def __showAnalytics(self,analysisList):
+        analysisList.sort()
+        listSum=0
+        standardDeviation=0
+        meanValue=0
+        maxValue=0
+        minValue=0
+        medianValue=0
+
+        analysisListSize=len(analysisList)
+        # mean calculation
+        for listData in analysisList:
+            listSum+=listData
+        meanValue=listSum/analysisListSize
+
+        #Standard Deviation Calculation
+        for listData in analysisList:
+            standardDeviation+=(listData-meanValue)**2
+        standardDeviation=np.sqrt(standardDeviation/analysisListSize)
+
+        #median calculation
+        if analysisListSize%2==1 :
+            medianValue=analysisList[analysisListSize//2]
+        else:
+            medianValue=(analysisList[analysisListSize//2-1]+analysisList[analysisListSize//2])/2
+
+        # Max value calculation
+        maxValue=analysisList[analysisListSize-1]
+
+        # Min Value Calculation
+        minValue=analysisList[0]
+
+        print(f"Standard Deviation: {standardDeviation:.2f}")
+        print(f"Mean Value: {meanValue:.2f}")
+        print(f"Maximum Value: {maxValue}")
+        print(f"Minimum Value: {minValue}")
+        print(f"Median Value: {medianValue:.2f}")
+
     def __init__(self):
         self.propertiesData = None
 
-    def __suburbSummaryHelper(self,dataframe, suburb):
+    def __suburbSummaryHelper(self,suburbMap, suburb):
         # Here some metrics of average ,standard deviation,median, minimum and maximum are left
 
-        targetSuburbSummary=[]
-        dataFrameSize = len(dataframe)
-        for i in range(dataFrameSize):
-            propertyValue = dataframe.loc[i]
-            if propertyValue['suburb'] == suburb:
-                if not np.isnan(propertyValue['bedrooms']):
-                    if not np.isnan(propertyValue['bathrooms']):
-                        if not np.isnan(propertyValue['parking_spaces']):
-                            targetSuburbSummary.append([propertyValue['bedrooms'],propertyValue['bathrooms'],propertyValue['parking_spaces']])
-
-        targetSuburbSummarySize=len(targetSuburbSummary)
-        if targetSuburbSummarySize == 0:
+        if suburb not in suburbMap:
             raise Exception("No such suburb with the provided value provided exists in data")
+        totalBedrooms=[]
+        totalBathrooms=[]
+        totalParkingSpaces=[]
+        targetSuburbSummary=suburbMap[suburb]
+        targetSuburbSummarySize=len(targetSuburbSummary)
         print(f"suburb : {suburb}")
         print(f"{'Bedrooms':<10}{'Bathrooms':<10}{'Parking Spaces':<15}")
         for summary in targetSuburbSummary:
             bedrooms, bathrooms, parking_spaces = summary
+            totalBedrooms.append(bedrooms)
+            totalBathrooms.append(bathrooms)
+            totalParkingSpaces.append(parking_spaces)
             print(f"{bedrooms:<10}{bathrooms:<10}{parking_spaces:<15}")
-
+        print("\n")
+        print("Analytics for Bedrooms : \n")
+        self.__showAnalytics(totalBedrooms)
+        print("\n")
+        print("Analytics for Bathrooms : \n")
+        self.__showAnalytics(totalBathrooms)
+        print("\n")
+        print("Analytics for Parking_Spaces : \n")
+        self.__showAnalytics(totalParkingSpaces)
+        
 
     def extract_property_info(self,file_path):
         propertiesDataFrame = None
@@ -125,18 +169,25 @@ class SimpleDataAnalyser:
         whetherGivenPriceExistsOrNot=self.__recursiveBinarySearchForPropertyPrices(targetSuburbPriceList,target_price,0,priceListSize-1)
         return whetherGivenPriceExistsOrNot
 
-    def suburb_summary(self,dataframe, suburb):
-        # Do some sort of optimization over here
-        #to remove recomputation
-        
+    def suburb_summary(self,dataframe,suburb):
+        suburbMap={}
+        dataFrameSize = len(dataframe)
+        for i in range(dataFrameSize):
+            propertyValue = dataframe.loc[i]
+            if not np.isnan(propertyValue['bedrooms']):
+                if not np.isnan(propertyValue['bathrooms']):
+                    if not np.isnan(propertyValue['parking_spaces']):
+                        if propertyValue['suburb'] not in suburbMap:
+                            suburbMap[propertyValue['suburb']] = []
+                        suburbMap[propertyValue['suburb']].append([propertyValue['bedrooms'],propertyValue['bathrooms'],propertyValue['parking_spaces']])
         if(suburb=="All"):
             suburbSet=set()
             for suburbValue in dataframe['suburb']:
                 suburbSet.add(suburbValue)
             for suburbValue in suburbSet:
-                self.__suburbSummaryHelper(dataframe,suburbValue)
+                self.__suburbSummaryHelper(suburbMap,suburbValue)
         else:
-            self.__suburbSummaryHelper(dataframe,suburb)
+            self.__suburbSummaryHelper(suburbMap,suburb)
                 
             
 
@@ -149,4 +200,5 @@ b=a.extract_property_info("property_information.csv")
 # print(a.avg_land_size(b,"ab"))
 # print(a.locate_price(881000,b,"Clayton"))
 # a._suburbSummaryHelper(b,"Clayton")
-a.suburb_summary(b,"All")
+a.suburb_summary(b,"Clayton")
+# a._showAnalytics([1,2,3,4,5,6])
