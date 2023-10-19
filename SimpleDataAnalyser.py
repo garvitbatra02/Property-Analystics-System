@@ -4,6 +4,7 @@ import numpy as np
 class SimpleDataAnalyser:
 
     def __recursiveBinarySearchForPropertyPrices(self,arr, target, low, high):
+        target=int(target)
         if low <= high:
             mid = low + (high - low) // 2
             if arr[mid] == target:
@@ -15,7 +16,15 @@ class SimpleDataAnalyser:
         return False  # Element is not in the list
 
     def __showAnalytics(self,analysisList):
-        analysisList.sort()
+        # Code to sort the given analysis list
+        for i in range(1, len(analysisList)):
+            key = analysisList[i]
+            j = i - 1
+            while j >= 0 and key < analysisList[j]:
+                analysisList[j + 1] = analysisList[j]
+                j -= 1
+            analysisList[j + 1] = key
+
         listSum=0
         standardDeviation=0
         meanValue=0
@@ -82,6 +91,7 @@ class SimpleDataAnalyser:
         print("\n")
         print("Analytics for Parking_Spaces : \n")
         self.__showAnalytics(totalParkingSpaces)
+        print("\n\n")
         
 
     def extract_property_info(self,file_path):
@@ -128,12 +138,12 @@ class SimpleDataAnalyser:
                         countOfProperties += 1
 
             if countOfProperties == 0:
-                raise ZeroDivisionError("No properties meet the criteria.")
+                raise ZeroDivisionError("Provided Suburb Does Not Exists in data")
 
             result = averageLandSizeValue / countOfProperties
 
         except ZeroDivisionError as e:
-            print(f"Error: {e}")
+            print(f"\nError: {e}")
             result = 0  # Handle the case when countOfProperties is 0
 
         return result
@@ -154,7 +164,8 @@ class SimpleDataAnalyser:
         
         priceListSize=len(targetSuburbPriceList)
         if priceListSize == 0:
-            raise Exception("No such suburb with the given value provided exists in data")
+            print("\nNo such suburb with the given value provided exists in data")
+            return 2
         
         # code for reverse insertion sort
         for i in range(1, len(targetSuburbPriceList)):

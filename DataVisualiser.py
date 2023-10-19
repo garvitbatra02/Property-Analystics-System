@@ -7,7 +7,7 @@ class DataVisualiser:
     def __init__(self):
         self.propertiesData = None
     
-    def prop_val_distribution(self,dataframe,suburb,target_currency):
+    def prop_val_distribution(self,dataframe,suburb,target_currency='AUD'):
         currency_dict = {"AUD": 1, "USD": 0.66, "INR": 54.25, "CNY": 4.72, "JPY": 93.87, "HKD": 5.12, "KRW": 860.92, "GBP": 0.51, "EUR": 0.60, "SGD": 0.88}
 
         dataAnalyser=SimpleDataAnalyser()
@@ -49,10 +49,10 @@ class DataVisualiser:
         plt.ylabel('Frequency')
         plt.title('Histogram showing plot of prices of property sold')
 
-        # Saving the chart as an image locally
+        #Saving the file locally
         plt.savefig('priceForGivenCurrencyAndSuburb.png')
 
-        # Show the plot
+        # plotting the histogram
         plt.show()
 
     def sales_trend(self,dataframe):
